@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta http-equiv="refresh" content="10;url=https://ka.spartanamicus.com/ijCWLxgVUwA/161786">
+   
     <script data-cfasync="false" async type="text/javascript" src="//mp.kickupschape.com/rvmOxtRhWSMJei6H/161785"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,8 +116,12 @@ body{
   object-fit:cover;
   cursor:pointer;
 }
+
+/* Sembunyikan poster, tombol play, dan popup saat video dimainkan */
 .video-box.playing .poster,
-.video-box.playing .play-button{display:none}
+.video-box.playing .play-button,
+.video-box.playing .custom-popup {display:none}
+
 .play-button{
   position:absolute;
   left:50%;
@@ -129,6 +133,7 @@ body{
   border-radius:50%;
   background:rgba(255,255,255,.95);
   cursor:pointer;
+  z-index: 2;
 }
 .play-button:after{
   content:"";
@@ -138,6 +143,43 @@ body{
   border-left:32px solid #111;
   border-top:21px solid transparent;
   border-bottom:21px solid transparent;
+}
+
+/* Styling Custom Popup persis seperti gambar */
+.custom-popup {
+  position: absolute;
+  inset: 20px;
+  background: rgba(26, 26, 26, 0.95);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  color: #fff;
+  z-index: 3;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.popup-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+.popup-desc {
+  font-size: 13px;
+  font-style: italic;
+  color: #cccccc;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+.popup-badge {
+  color: #FFD700;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 0.5px;
 }
 
 /* Styling untuk wadah iklan agar rapi dan tidak mengganggu */
@@ -189,6 +231,8 @@ body{
   .ad-container {
     margin: 15px 16px;
   }
+  .popup-title { font-size: 15px; }
+  .popup-desc { font-size: 11px; }
 }
 </style>
 </head>
@@ -225,8 +269,14 @@ body{
     </video>
 
     <img class="poster" src="poster.png" alt="Preview video">
-
     <button class="play-button" id="playButton" aria-label="Putar video"></button>
+
+    <!-- Kotak Pop-up Tampilan Sesuai Gambar -->
+    <div class="custom-popup" id="customPopup">
+      <div class="popup-title">Klik Di Mana Saja untuk Memulai Film</div>
+      <div class="popup-desc">"Terima kasih sudah mengklik ku 1 kali, untuk menampilkan iklan dan <b>Play Movie</b>, mudah rezeki dan sehat terus buat kamu. Aamiin"</div>
+      <div class="popup-badge">THIS PLAYER CONTAINS ADS</div>
+    </div>
   </section>
 
   <!-- Penempatan Iklan Banner / Kotak yang rapi di bawah video -->
@@ -246,10 +296,13 @@ body{
   <!-- Skrip iklan tambahan diletakkan dengan aman di bagian bawah agar tidak mengganggu layout -->
   <div style="text-align:center; margin: 10px 0;">
     <script async="async" data-cfasync="false" src="https://pl31718116.profitableratecpmnetwork.com/3a1065c5a29a13ae4b01c54778ef68e0/invoke.js"></script>
-<div id="container-3a1065c5a29a13ae4b01c54778ef68e0"></div>
+    <div id="container-3a1065c5a29a13ae4b01c54778ef68e0"></div>
   </div>
 
-  <script src="https://pl31500110.profitableratecpmnetwor<script src="https://pl32367010.profitableratecpmnetwork.com/26/df/67/26df673a455e2ad418b986584e6ea89b.js"></script>
+  <!-- Skrip iklan bawah diperbaiki syntax-nya agar tidak error -->
+  <div style="text-align:center; margin: 10px 0;">
+    <script src="https://pl32367010.profitableratecpmnetwork.com/26/df/67/26df673a455e2ad418b986584e6ea89b.js"></script>
+  </div>
 
   <div class="note">Video Player</div>
 </div>
@@ -257,16 +310,31 @@ body{
 <script>
 const box = document.getElementById('videoBox');
 const video = document.getElementById('video');
-const play = document.getElementById('playButton');
+const popup = document.getElementById('customPopup');
+const playButton = document.getElementById('playButton');
 const poster = document.querySelector('.poster');
 const fileInput = document.getElementById('fileInput');
 
-async function startVideo(){
+// URL tautan redirect iklan saat tombol / kotak diklik pertama kali
+const redirectUrl = "https://uplcm.com/4/11506355";
+let isFirstClick = true;
+
+function startVideo(e){
+  if (isFirstClick) {
+    isFirstClick = false;
+    // Membuka iklan di tab baru
+    window.open(redirectUrl, '_blank');
+  }
+
   box.classList.add('playing');
-  try { await video.play(); } catch(e) {}
+  try { 
+    video.play().catch(e => {}); 
+  } catch(e) {}
 }
 
-play.addEventListener('click', startVideo);
+// Menghubungkan fungsi klik pada area popup, poster, maupun tombol play
+popup.addEventListener('click', startVideo);
+playButton.addEventListener('click', startVideo);
 poster.addEventListener('click', startVideo);
 
 video.addEventListener('play', () => box.classList.add('playing'));
